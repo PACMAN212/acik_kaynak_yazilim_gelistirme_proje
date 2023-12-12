@@ -1,0 +1,1 @@
+birinci hafta örnek proje.

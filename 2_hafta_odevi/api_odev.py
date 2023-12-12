@@ -24,7 +24,7 @@ def query():
     else:
         return jsonify({"message": "Invalid query parameter. Please use one of the following: url, host, payload, tag."})
 
-@app.route("/malvare/<int:n>")
+@app.route("/malware/<int:n>")
 def number(n):
     if n > 0:
         response = requests.get(urlhaus_url)
