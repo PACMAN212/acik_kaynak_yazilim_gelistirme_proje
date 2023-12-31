@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./4_hafta_docker
+    command: python3 dockerproje.py run -h 0.0.0.0
+    volumes:
+      - ./4_hafta_docker/:/usr/src/app/
+    ports:
+      - 5001:5000
+
