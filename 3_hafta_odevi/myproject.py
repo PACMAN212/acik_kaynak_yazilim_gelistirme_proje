@@ -1,17 +1,18 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 import requests
+urlhaus_url = "https://urlhaus-api.abuse.ch/v1/urls/recent/"
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return jsonify({"message": "This API allows you to retrieve the latest malicious URLs from URLhaus. Use the endpoint '/malware/<int:n>' to get the most recent 'n' malicious URLs!"})
+    abort(404)
 
 @app.route("/query")
 def query():
     query = request.args.get("q")
     if query in ["url", "host", "payload", "tag"]:
-        url = "https://urlhaus-api.abuse.ch/v1/urls/recent/?query=" + query
+        url = urlhaus_url + "?query=" + query
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -24,7 +25,7 @@ def query():
 @app.route("/malware/<int:n>")
 def number(n):
     if n > 0:
-        response = requests.get("https://urlhaus-api.abuse.ch/v1/urls/recent/")
+        response = requests.get(urlhaus_url)
         if response.status_code == 200:
             data = response.json()
             urls = data['urls']
@@ -33,7 +34,7 @@ def number(n):
         else:
             return jsonify({"error": response.text})
     else:
-        return jsonify({"message": "Invalid number parameter. Please use a positive integer for 'n'."})
+        return jsonify({"message": "Invalid number parameter. Please use a positive integer."})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0')
